@@ -1,6 +1,6 @@
 <template>
   <div class="table-comments">
-    <mtd-loading :loading="listLoading" class="card-list" ref="cardListRef">
+    <div v-loading="listLoading" class="card-list" ref="cardListRef">
       <template v-if="cardList.length || listLoading || createdMode">
         <Card
           v-for="(card, index) in cardList"
@@ -27,12 +27,25 @@
           @create="handleCreateCard"
         />
       </template>
-      <div v-else-if="!cardList.length && !listLoading" :imgSize="100" class="empty-text">暂无数据</div>
-    </mtd-loading>
+      <div
+        v-else-if="!cardList.length && !listLoading"
+        :imgSize="100"
+        class="empty-text"
+      >
+        暂无数据
+      </div>
+    </div>
   </div>
 </template>
 <script lang="ts">
-import { defineComponent, ref, provide, watch, nextTick, PropType } from "vue-demi";
+import {
+  defineComponent,
+  ref,
+  provide,
+  watch,
+  nextTick,
+  PropType,
+} from "vue-demi";
 import Card from "./Card.vue";
 import CreateCard from "./CreateCard.vue";
 import type { CommentVo, WordCommentInfo } from "../../../types/word-comment.d";
@@ -46,7 +59,8 @@ export function isInViewport(element: HTMLElement) {
   return (
     rect.top >= 0 &&
     rect.left >= 0 &&
-    rect.bottom <= (window.innerHeight || document.documentElement.clientHeight) &&
+    rect.bottom <=
+      (window.innerHeight || document.documentElement.clientHeight) &&
     rect.right <= (window.innerWidth || document.documentElement.clientWidth)
   );
 }
@@ -78,7 +92,7 @@ export default defineComponent({
       (val) => {
         resultRef.value = val;
       },
-      { immediate: true },
+      { immediate: true }
     );
     provide("resultRef", resultRef);
 
@@ -106,17 +120,23 @@ export default defineComponent({
       id: number | string,
       options: ScrollCardOptions = {
         scrollToReply: false,
-      },
+      }
     ) => {
       if (!cardListRef.value || !id) return;
 
       const srcollMethod = (id: string | number) => {
         const container = (cardListRef.value as any).$el as HTMLElement;
-        const curCard = container.querySelector(`.comments-card[data-card-id="${id}"]`);
+        const curCard = container.querySelector(
+          `.comments-card[data-card-id="${id}"]`
+        );
         if (!curCard) return;
 
         nextTick(() => {
-          let top = curCard.getBoundingClientRect().top + container.scrollTop - container.offsetTop - 60;
+          let top =
+            curCard.getBoundingClientRect().top +
+            container.scrollTop -
+            container.offsetTop -
+            60;
           if (options.scrollToReply) top = top + curCard.clientHeight - 180;
           container.scrollTo({ top: top, behavior: "smooth" });
         });
@@ -179,14 +199,14 @@ export default defineComponent({
           scrollToCard(props.activeId);
         });
       },
-      { immediate: true },
+      { immediate: true }
     );
 
     watch(
       () => expandCardKey.value,
       () => {
         emit("update:active-id", expandCardKey.value);
-      },
+      }
     );
 
     return {
@@ -240,36 +260,6 @@ export default defineComponent({
     }
   }
 
-  & ::v-deep {
-    .mtd-radio-group {
-      // background: @bg-gray;
-      border-radius: 4px;
-      padding: 2px;
-    }
-
-    .mtd-radio-button {
-      // background: @bg-gray;
-      border: none;
-      line-height: 24px;
-      height: 24px;
-      padding: 0 10px;
-      border-radius: 4px;
-      margin: 0 1px;
-    }
-
-    .mtd-radio-button.mtd-radio-button-checked {
-      // background: @bg-white;
-      box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.24);
-      // color: @text-color;
-    }
-
-    .mtd-radio-button.hover,
-    .mtd-radio-button:hover {
-      // color: @text-color;
-      box-shadow: 0 0 2px 0 rgba(0, 0, 0, 0.24) !important;
-    }
-  }
-
   .empty-text {
     text-align: center;
     margin-top: 150px;
@@ -280,11 +270,5 @@ export default defineComponent({
   flex: 1;
   padding: 4px 12px;
   overflow: auto;
-}
-
-.comments-tabs {
-  & ::v-deep .mtd-radio-button-inner {
-    font-size: 12px;
-  }
 }
 </style>

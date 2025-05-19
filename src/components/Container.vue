@@ -32,55 +32,6 @@
           @update:active-id="handleUpdateActiveId"
           @focus-card="handleFocusCard"
         >
-          <template #comment-filter>
-            <!-- TODO: 待适配 -->
-            <!-- <el-dropdown>
-              <span class="el-dropdown-link">
-                <el-icon class="el-icon--right">
-                  <Filter />
-                </el-icon>
-              </span>
-              <template #dropdown>
-                <el-dropdown-menu>
-                  <el-dropdown-item>Action 1</el-dropdown-item>
-                  <el-dropdown-item>Action 2</el-dropdown-item>
-                  <el-dropdown-item>Action 3</el-dropdown-item>
-                  <el-dropdown-item disabled>Action 4</el-dropdown-item>
-                  <el-dropdown-item divided>Action 5</el-dropdown-item>
-                </el-dropdown-menu>
-              </template>
-            </el-dropdown> -->
-            <!-- <el-dropdown trigger="click" placement="bottom-end">
-              <el-tooltip content="筛选" size="small" placement="top">
-                筛选
-                 <el-icon-button type="secondary" icon="mtdicon mtdicon-filter-o" /> 
-              </el-tooltip>
-              <el-dropdown-menu slot="dropdown" style="width: 220px" class="word-comment-filter-menu">
-                <el-dropdown-menu-item class="filter-menu-item" @click="commentFilterType = 'all'">
-                  <div class="filter-menu-item-left filter-menu-item-main">
-                    <span>
-                      全部
-                      <span>{{ dataSource.length }}</span>
-                    </span>
-                  </div>
-                  <div v-if="commentFilterType === 'all'">
-                    <i class="mtdicon mtdicon-check filter-menu-item-check"></i>
-                  </div>
-                </el-dropdown-menu-item>
-                <el-dropdown-menu-item class="filter-menu-item" @click="commentFilterType = 'related'">
-                  <div class="filter-menu-item-left">
-                    <div class="filter-menu-item-main">
-                      <span>与我相关 {{ myRelatedComments.length }}</span>
-                    </div>
-                    <div class="filter-menu-item-desc"><span>仅展示我添加的或 @ 我的评论</span></div>
-                  </div>
-                  <div v-if="commentFilterType === 'related'">
-                    <i class="mtdicon mtdicon-check filter-menu-item-check"></i>
-                  </div>
-                </el-dropdown-menu-item>
-              </el-dropdown-menu>
-            </el-dropdown> -->
-          </template>
         </WordComment>
       </transition>
     </div>

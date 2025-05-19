@@ -6,12 +6,6 @@ import App from "./App.vue";
 import WordComment from "../src/index";
 import Editor from "./components/wangeditor/Editor.vue";
 
-import { Boot } from "@wangeditor/editor";
-import mentionModule from "@wangeditor/plugin-mention";
-
-// 注册编辑器@插件
-Boot.registerModule(mentionModule);
-
 const app = createApp(App);
 
 app.use(ElementPlus);

@@ -9,13 +9,6 @@
         @onChange="handleChange"
         @onCreated="handleCreated"
       />
-      <mention-modal
-        v-if="isShowModal"
-        @hideMentionModal="hideMentionModal"
-        @insertMention="insertMention"
-        @deleteMention="deleteMention"
-        @insertText="insertText"
-      ></mention-modal>
     </div>
   </div>
 </template>
@@ -23,13 +16,18 @@
 <script lang="ts">
 import type { IDomEditor, IEditorConfig } from "@wangeditor/editor";
 import { Editor } from "@wangeditor/editor-for-vue";
-import MentionModal from "./MentionModal.vue";
-import { defineComponent, ref, onBeforeUnmount, shallowRef, watchEffect, nextTick } from "vue";
-import type { MentionElement } from "@wangeditor/plugin-mention";
+import {
+  defineComponent,
+  ref,
+  onBeforeUnmount,
+  shallowRef,
+  watchEffect,
+  nextTick,
+} from "vue";
 
 export default defineComponent({
   name: "MyEditor",
-  components: { Editor, MentionModal },
+  components: { Editor },
   props: {
     value: {
       default: "",
@@ -49,22 +47,8 @@ export default defineComponent({
 
     const isShowModal = ref(false);
 
-    function showMentionModal() {
-      isShowModal.value = true;
-    }
-
-    function hideMentionModal() {
-      isShowModal.value = false;
-    }
-
     const editorConfig = ref<Partial<IEditorConfig>>({
       placeholder: "请输入内容...",
-      EXTEND_CONF: {
-        mentionConfig: {
-          showModal: showMentionModal,
-          hideModal: hideMentionModal,
-        },
-      },
       autoFocus: false,
     });
 
@@ -80,32 +64,6 @@ export default defineComponent({
     function handleChange(editor: IDomEditor) {
       const curHtml = editor.getHtml();
       emit("change", curHtml);
-    }
-
-    function deleteMention() {
-      const editor = _editor.value;
-      if (!editor) return;
-      editor.restoreSelection(); // 恢复选区
-      editor.deleteBackward("character"); // 删除 '@'
-    }
-
-    function insertMention(id: string, name: string) {
-      const mentionNode: MentionElement = {
-        type: "mention", // 必须是 'mention'
-        value: name,
-        info: { id },
-        children: [{ text: "" }], // 必须有一个空 text 作为 children
-      };
-
-      const editor = _editor.value;
-      if (editor) {
-        if (!editor.isFocused()) {
-          editor.restoreSelection(); // 恢复选区
-        }
-        editor.deleteBackward("character"); // 删除 '@'
-        editor.insertNode(mentionNode); // 插入 mention
-        editor.move(1); // 移动光标
-      }
     }
 
     function insertText(text: string) {
@@ -136,7 +94,9 @@ export default defineComponent({
       const wrapper = document.createElement("div");
       wrapper.innerHTML = html;
       // 获取 mention 列表
-      const nodes: NodeListOf<HTMLElement> = wrapper.querySelectorAll(`[data-w-e-type="mention"]`);
+      const nodes: NodeListOf<HTMLElement> = wrapper.querySelectorAll(
+        `[data-w-e-type="mention"]`
+      );
       const mentions = [];
       // biome-ignore lint/complexity/noForEach: <explanation>
       nodes.forEach((node) => {
@@ -164,13 +124,9 @@ export default defineComponent({
     return {
       isShowModal,
       editorConfig,
-      hideMentionModal,
-      showMentionModal,
       handleCreated,
       handleChange,
-      insertMention,
       insertText,
-      deleteMention,
       html,
       focus,
       getHtml,

@@ -1,5 +1,11 @@
 <template>
-  <div :class="['wx-comment', className, !showOperationsTooltip ? 'comment-header-btns-show' : '']">
+  <div
+    :class="[
+      'wx-comment',
+      className,
+      !showOperationsTooltip ? 'comment-header-btns-show' : '',
+    ]"
+  >
     <div class="wx-comment-avatar">
       <Avatar :mis-id="comment.createdBy" :image-url="commenterInfo.imageUrl" />
     </div>
@@ -8,7 +14,10 @@
       <div class="wx-comment-header">
         <div class="comment-header-left">
           <span class="comment-name">{{ commenterInfo.userName }}</span>
-          <span class="comment-name" v-if="comment.parentCommenter && showReply">
+          <span
+            class="comment-name"
+            v-if="comment.parentCommenter && showReply"
+          >
             {{ comment.parentCommenterName }}
           </span>
           <span class="comment-time">{{ formatTime(comment.createTime) }}</span>
@@ -16,38 +25,47 @@
 
         <div class="comment-header-btns">
           <slot />
-          <mtd-popover
+          <el-popover
             v-if="showMore && canEdit"
             trigger="hover"
             placement="bottom"
             @input="handleTooltipInputChange"
           >
-            <i class="mtdicon mtdicon-more comment-icon disable-card-focus" />
-            <div slot="content" class="popover-content">
+            <template #reference>
+              <el-icon class="comment-icon disable-card-focus"
+                ><More
+              /></el-icon>
+            </template>
+            <div class="popover-content">
               <div class="popover-more-btn" @click="handleCommentModify">
-                <i class="mtdicon mtdicon-edit-o" />
+                <el-icon><Edit /></el-icon>
                 编辑
               </div>
-              <mtd-popconfirm
-                placement="bottom"
-                message="确定删除此评论吗？"
-                @ok="handleDelete"
-                :okButtonProps="{
-                  type: 'primary',
-                }"
+              <el-popconfirm
+                placement="left"
+                title="确定删除此评论吗？"
+                @confirm="handleDelete"
               >
-                <div class="popover-more-btn">
-                  <i class="mtdicon mtdicon-delete-o disable-card-focus" />
-                  删除
-                </div>
-              </mtd-popconfirm>
+                <template #reference>
+                  <div class="popover-more-btn">
+                    <el-icon class="disable-card-focus"><Delete /></el-icon>
+                    删除
+                  </div>
+                </template>
+              </el-popconfirm>
               <slot name="more" />
             </div>
-          </mtd-popover>
+          </el-popover>
         </div>
       </div>
 
-      <div :class="['comment-editor-wrapper', !edit && 'readonly-comment-editor-wrapper']" style="padding: 0">
+      <div
+        :class="[
+          'comment-editor-wrapper',
+          !edit && 'readonly-comment-editor-wrapper',
+        ]"
+        style="padding: 0"
+      >
         <comment-editor
           class="editor"
           :readOnly="!edit"
@@ -58,8 +76,10 @@
         <div class="operation" v-if="edit">
           <div class="operation-left"></div>
           <div class="operation-right">
-            <mtd-button size="small" type="default" @click="cancelUpdateComment">取消</mtd-button>
-            <mtd-button
+            <el-button size="small" type="default" @click="cancelUpdateComment"
+              >取消</el-button
+            >
+            <el-button
               class="m-left-12"
               size="small"
               type="primary"
@@ -68,7 +88,7 @@
               :loading="updateCommentStatus === 'processing'"
             >
               保存
-            </mtd-button>
+            </el-button>
           </div>
         </div>
       </div>
@@ -77,7 +97,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, PropType, Ref, nextTick, inject, computed, watch } from "vue-demi";
+import {
+  defineComponent,
+  ref,
+  PropType,
+  Ref,
+  nextTick,
+  inject,
+  computed,
+  watch,
+} from "vue-demi";
 import Avatar from "./Avatar.vue";
 import type {
   CommentVo,
@@ -87,9 +116,10 @@ import type {
   ActionStatus,
 } from "../../../types/word-comment.d";
 import { formatTime } from "../../utils/index";
+import { Edit, More, Delete } from "@element-plus/icons-vue";
 
 export default defineComponent({
-  components: { Avatar },
+  components: { Avatar, Edit, More, Delete },
   props: {
     comment: {
       type: Object as PropType<CommentVo>,
@@ -121,13 +151,15 @@ export default defineComponent({
       () => {
         if (edit.value) return;
         commentText.value = props.comment.comment;
-      },
+      }
     );
 
     const saveDisabled = ref(false);
 
     const commentEditorRef: Ref<CommentEditor> = ref(null);
-    const updateCommentStatus: Ref<ActionStatus> = inject("updateCommentStatus");
+    const updateCommentStatus: Ref<ActionStatus> = inject(
+      "updateCommentStatus"
+    );
 
     function handleCommentTextChange(value: string) {
       commentText.value = value;
@@ -166,7 +198,11 @@ export default defineComponent({
 
     const commenterInfos: Ref<UserInfo[]> = inject("commenterInfos");
     const commenterInfo = computed(() => {
-      return commenterInfos.value.find((item) => item.misId === props.comment.createdBy) || {};
+      return (
+        commenterInfos.value.find(
+          (item) => item.misId === props.comment.createdBy
+        ) || {}
+      );
     });
 
     watch(updateCommentStatus, (value, oldValue) => {

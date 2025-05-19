@@ -15,15 +15,17 @@
       >
         <template #default="{ comment }">
           <slot name="comment-header" :comment="comment" />
-          <mtd-tooltip
+          <!-- <el-tooltip
             content="回复"
             placement="top"
             :popper-options="{
               removeOnDestroy: true,
             }"
           >
-            <i class="mtdicon mtdicon-comment comment-icon" @click="replyComment(comment)" />
-          </mtd-tooltip>
+            <el-icon class="comment-icon" @click="replyComment(comment)"
+              ><CommentIcon
+            /></el-icon>
+          </el-tooltip> -->
         </template>
       </Comment>
     </div>
@@ -37,17 +39,16 @@
         @change="handleCommentTextChange"
       />
       <div class="operation">
-        <div class="operation-left">
-          <mtd-icon-button
-            class="demo-icon-btn"
-            type="secondary"
-            icon="mtdicon mtdicon-at"
-            @click="handleMentionClick"
-          />
-        </div>
+        <div class="operation-left"></div>
         <div class="operation-right">
-          <mtd-button class="disable-card-focus" size="small" type="default" @click="cancelComment">取消</mtd-button>
-          <mtd-button
+          <el-button
+            class="disable-card-focus"
+            size="small"
+            type="default"
+            @click="cancelComment"
+            >取消</el-button
+          >
+          <el-button
             class="m-left-12"
             size="small"
             type="primary"
@@ -56,7 +57,7 @@
             :disabled="saveDisabled"
           >
             发送
-          </mtd-button>
+          </el-button>
         </div>
       </div>
     </div>
@@ -75,10 +76,11 @@ import type {
   AddCommentParams,
   ActionStatus,
 } from "../../../types/word-comment";
+import { Comment as CommentIcon } from "@element-plus/icons-vue";
 
 export default defineComponent({
   name: "CommentList",
-  components: { Comment },
+  components: { Comment, CommentIcon },
   props: {
     comments: {
       type: Array as PropType<CommentVo[]>,
@@ -139,13 +141,21 @@ export default defineComponent({
         commentEditorRef.value.focus();
 
         const { createdBy } = comment;
-        const item = commenterInfos.value.find((item) => item.misId === createdBy);
-        commentEditorRef.value.insertMention(createdBy, item?.userName || createdBy);
+        const item = commenterInfos.value.find(
+          (item) => item.misId === createdBy
+        );
+        commentEditorRef.value.insertMention(
+          createdBy,
+          item?.userName || createdBy
+        );
       });
     };
 
     const deleteComment = (comment: CommentVo) => {
-      emit("delete-comment", { comment, id: cardId.value } as DeleteCommentParams);
+      emit("delete-comment", {
+        comment,
+        id: cardId.value,
+      } as DeleteCommentParams);
     };
 
     const cancelComment = () => {
@@ -168,10 +178,6 @@ export default defineComponent({
       emit("update-comment", { ...data, id: cardId.value });
     };
 
-    function handleMentionClick() {
-      commentEditorRef.value.insertText("@");
-    }
-
     return {
       commentText,
       editorVisible,
@@ -181,7 +187,6 @@ export default defineComponent({
       addComment,
       updateComment,
       commentEditorRef,
-      handleMentionClick,
       handleCommentTextChange,
       saveDisabled,
       createComentStatus,
@@ -216,7 +221,7 @@ export default defineComponent({
 }
 
 .disable-card-focus {
-  & ::v-deep span {
+  & :deep(span) {
     pointer-events: none;
   }
 }
@@ -225,21 +230,6 @@ export default defineComponent({
 }
 </style>
 <style lang="scss">
-.mtd-popconfirm-icon {
-  font-size: 20px !important;
-}
-
-.mtd-popconfirm-actions {
-  .mtd-btn-small {
-    height: 22px !important;
-    line-height: 20px !important;
-
-    & > span {
-      line-height: 20px !important;
-    }
-  }
-}
-
 .popover-more-btn {
   width: 50px;
   display: flex;

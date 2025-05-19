@@ -11,7 +11,7 @@
   >
     <div class="card-status" v-if="card.status === 'mismatched'">
       <div class="card-status-text">
-        <i class="mtdicon mtdicon-info-circle"></i>
+        <el-icon style="margin-right: 4px"><InfoFilled /></el-icon>
         <span>原文已删除</span>
       </div>
       <div v-show="!cardFocus" class="card-status-splitline"></div>
@@ -19,54 +19,53 @@
 
     <div class="card-header">
       <div class="card-title">
-        <mtd-tooltip :content="card.content" size="small" placement="top">
+        <el-tooltip :content="card.content" size="small" placement="top">
           <span>{{ card.content }}</span>
-        </mtd-tooltip>
+        </el-tooltip>
       </div>
       <div class="card-header-btns">
-        <mtd-tooltip content="上一条" class="header-btn" placement="top">
-          <mtd-icon-button
+        <el-tooltip content="上一条" class="header-btn" placement="top">
+          <el-icon
             class="disable-focus-hidden"
             size="small"
-            type="secondary"
-            icon="mtdicon mtdicon-up-thick disable-focus-hidden"
             @mousedown="goPrevCard"
             :disabled="isFirstCard"
-          />
-        </mtd-tooltip>
-        <mtd-tooltip content="下一条" class="header-btn" placement="top">
-          <mtd-icon-button
+            ><ArrowUp
+          /></el-icon>
+        </el-tooltip>
+        <el-tooltip content="下一条" class="header-btn" placement="top">
+          <el-icon
             class="disable-focus-hidden"
             size="small"
-            type="secondary"
-            icon="mtdicon mtdicon-down-thick disable-focus-hidden"
             @mousedown="goNextCard"
             :disabled="isLastCard"
-          />
-        </mtd-tooltip>
+            ><ArrowDown
+          /></el-icon>
+        </el-tooltip>
         <div class="separator"></div>
-        <mtd-popconfirm
-          placement="bottom"
-          message="确定此评论已解决？"
-          :okButtonProps="{
-            type: 'primary',
-          }"
-          @ok="resolveComment"
-        >
-          <mtd-tooltip content="解决评论" class="header-btn" placement="top">
-            <mtd-icon-button
-              class="disable-focus-hidden resolve-btn"
-              size="small"
-              type="secondary"
-              icon="mtdicon mtdicon-success-o disable-card-focus"
-            />
-          </mtd-tooltip>
-        </mtd-popconfirm>
+        <el-popconfirm title="确定此评论已解决？" @confirm="resolveComment">
+          <template #reference>
+            <el-tooltip content="解决评论" class="header-btn" placement="top">
+              <el-icon
+                class="disable-focus-hidden resolve-btn"
+                size="small"
+                type="secondary"
+                ><SuccessFilled
+              /></el-icon>
+            </el-tooltip>
+          </template>
+        </el-popconfirm>
       </div>
     </div>
     <div class="annotation-content">
       <slot name="comment-list" :card="card" />
-      <div v-show="!cardFocus" class="reply-tip" @click="changeExpandCardKey(card.id)">回复...</div>
+      <div
+        v-show="!cardFocus"
+        class="reply-tip"
+        @click="changeExpandCardKey(card.id)"
+      >
+        回复...
+      </div>
     </div>
   </div>
 </template>
@@ -84,9 +83,16 @@ import {
   PropType,
 } from "vue-demi";
 import type { WordCommentInfo } from "../../../types/word-comment.d";
+import { ArrowUp, ArrowDown, SuccessFilled, InfoFilled } from "@element-plus/icons-vue";
 
 export default defineComponent({
   name: "Card",
+  components: {
+    ArrowUp,
+    ArrowDown,
+    InfoFilled,
+    SuccessFilled,
+  },
   props: {
     card: {
       type: Object as PropType<WordCommentInfo>,
@@ -205,9 +211,6 @@ export default defineComponent({
     color: rgba(17, 25, 37, 0.451);
     padding: 8px 12px 0;
     line-height: 16px;
-    .mtdicon {
-      margin-right: 4px;
-    }
     .card-status-splitline {
       height: 1px;
       margin-top: 8px;
