@@ -1,6 +1,7 @@
 <template>
   <div>
-    <WordCommentContainer
+    <el-button type="primary">Primary</el-button>
+    <!-- <WordCommentContainer
       ref="containerRef"
       :userInfo="userInfo"
       :dataSource="wordCommentList"
@@ -18,12 +19,12 @@
       <template #popover>
         <mtd-icon-button class="popover-icon-btn" type="secondary" icon="mtdicon mtdicon-comment" />
       </template>
-    </WordCommentContainer>
+    </WordCommentContainer> -->
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "@vue/composition-api";
+import { defineComponent, ref, onMounted } from "vue";
 import Article from "./components/Article.vue";
 import type {
   WordCommentInfo,
@@ -46,7 +47,8 @@ async function getWordList() {
 }
 
 const getWordContainerId = (container: HTMLElement) => container.dataset.divId;
-const getWordContainer = (id: WordInfo["divId"]) => document.querySelector('[data-div-id="' + id + '"]');
+const getWordContainer = (id: WordInfo["divId"]) =>
+  document.querySelector(`[data-div-id="${id}"]`);
 
 export default defineComponent({
   name: "App",
@@ -64,17 +66,17 @@ export default defineComponent({
 
     let timer = null;
     let finished = null;
-    let lastFetchTime = null; // 上一次请求的时间
+    // let lastFetchTime = null; // 上一次请求的时间
     let intervalTime = null; // 每次请求的时间间隔
 
-    function poll(fn: Function, interval: number) {
+    function poll(fn: () => void, interval: number) {
       // 清除上一个定时器
       if (timer) {
         clearTimeout(timer);
       }
 
       // 设置新的定时器
-      timer = setTimeout(async function () {
+      timer = setTimeout(async () => {
         try {
           // 执行请求
           await fn();
@@ -84,6 +86,7 @@ export default defineComponent({
           // 结束轮询
           if (finished) {
             timer = null;
+            // biome-ignore lint/correctness/noUnsafeFinally: <explanation>
             return;
           }
           // 递归调用，实现轮询
@@ -137,7 +140,9 @@ export default defineComponent({
       if (index === -1) return;
 
       const item = originData[index];
-      const commentIndex = item.comments.findIndex((item) => item.id === comment.id);
+      const commentIndex = item.comments.findIndex(
+        (item) => item.id === comment.id
+      );
       if (commentIndex === -1) return;
 
       item.comments.splice(commentIndex, 1);
@@ -152,7 +157,9 @@ export default defineComponent({
       if (index === -1) return;
 
       const item = originData[index];
-      const commentIndex = item.comments.findIndex((item) => item.id === comment.id);
+      const commentIndex = item.comments.findIndex(
+        (item) => item.id === comment.id
+      );
       if (commentIndex === -1) return;
 
       item.comments[commentIndex].comment = comment.comment;
@@ -176,7 +183,12 @@ export default defineComponent({
         createdBy: "zhangxingbin",
         createTime: new Date().toLocaleDateString(),
       };
-      const item: WordCommentInfo = { ...range, id: createId(), comments: [newComment], status: 'mismatched' };
+      const item: WordCommentInfo = {
+        ...range,
+        id: createId(),
+        comments: [newComment],
+        status: "mismatched",
+      };
 
       const originData = await getWordList();
       const newData = originData.concat(item);

@@ -29,7 +29,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from "@vue/composition-api";
+import { defineComponent, ref, onMounted } from "vue";
 import { UserService } from "../../../src/services/user";
 import type { UserInfo } from "../../../types/index";
 

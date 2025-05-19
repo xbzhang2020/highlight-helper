@@ -21,11 +21,11 @@
 </template>
 
 <script lang="ts">
-import { IDomEditor, IEditorConfig } from "@wangeditor/editor";
+import type { IDomEditor, IEditorConfig } from "@wangeditor/editor";
 import { Editor } from "@wangeditor/editor-for-vue";
 import MentionModal from "./MentionModal.vue";
-import { defineComponent, ref, onBeforeUnmount, shallowRef, watchEffect, nextTick } from "@vue/composition-api";
-import { MentionElement } from "@wangeditor/plugin-mention";
+import { defineComponent, ref, onBeforeUnmount, shallowRef, watchEffect, nextTick } from "vue";
+import type { MentionElement } from "@wangeditor/plugin-mention";
 
 export default defineComponent({
   name: "MyEditor",
@@ -138,6 +138,7 @@ export default defineComponent({
       // 获取 mention 列表
       const nodes: NodeListOf<HTMLElement> = wrapper.querySelectorAll(`[data-w-e-type="mention"]`);
       const mentions = [];
+      // biome-ignore lint/complexity/noForEach: <explanation>
       nodes.forEach((node) => {
         const info = JSON.parse(decodeURIComponent(node.dataset.info));
         info && mentions.push(info.id);

@@ -1,18 +1,9 @@
 import { defineConfig } from "vite";
-import { createVuePlugin } from "vite-plugin-vue2";
+import vue from "@vitejs/plugin-vue";
 import cssInjectedByJsPlugin from "vite-plugin-css-injected-by-js";
 
 export default defineConfig({
-  plugins: [
-    createVuePlugin({
-      vueTemplateOptions: {},
-      jsx: true,
-      jsxOptions: {
-        compositionAPI: true,
-      },
-    }),
-    cssInjectedByJsPlugin({ topExecutionPriority: false }),
-  ],
+  plugins: [vue(), cssInjectedByJsPlugin({ topExecutionPriority: false })],
   server: {
     port: "3000",
     host: "0.0.0.0",
@@ -25,12 +16,12 @@ export default defineConfig({
       fileName: "index",
     },
     rollupOptions: {
-      external: ["vue", "@vue/composition-api", 'vue-demi'],
+      external: ["vue", "@vue/composition-api", "vue-demi"],
       output: {
         globals: {
           vue: "Vue",
           "@vue/composition-api": "VueCompositionAPI",
-          "vue-demi": "vueDemi", 
+          "vue-demi": "vueDemi",
         },
         exports: "named",
       },

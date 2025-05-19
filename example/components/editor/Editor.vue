@@ -12,7 +12,7 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onBeforeUnmount, watchEffect, shallowRef, ref, watch } from "@vue/composition-api";
+import { defineComponent, onBeforeUnmount, watchEffect, shallowRef, ref, watch } from "vue";
 import { ParkerEditor } from "@datafe/vue-parker-editor";
 import { MentionProvider } from "./mention";
 
