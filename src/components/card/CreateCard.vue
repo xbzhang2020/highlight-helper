@@ -1,5 +1,9 @@
 <template>
-  <div :class="['comments-card', 'comments-card-border', 'border-yellow']" ref="cardRef" :data-card-id="cardId">
+  <div
+    :class="['comments-card', 'comments-card-border', 'border-yellow']"
+    ref="cardRef"
+    :data-card-id="cardId"
+  >
     <div class="card-header">
       <div class="card-title">{{ title }}</div>
     </div>
@@ -12,17 +16,16 @@
         @change="handleCommentTextChange"
       />
       <div class="operation">
-        <div class="operation-left">
-          <mtd-icon-button
-            class="demo-icon-btn"
-            type="secondary"
-            icon="mtdicon mtdicon-at"
-            @click="handleMentionClick"
-          />
-        </div>
+        <div class="operation-left"></div>
         <div class="operation-right">
-          <mtd-button class="disable-card-focus" size="small" type="default" @click="cancelCreate">取消</mtd-button>
-          <mtd-button
+          <el-button
+            class="disable-card-focus"
+            size="small"
+            type="default"
+            @click="cancelCreate"
+            >取消</el-button
+          >
+          <el-button
             class="m-left-12"
             size="small"
             type="primary"
@@ -31,7 +34,7 @@
             :loading="createWordStatus === 'processing'"
           >
             发送
-          </mtd-button>
+          </el-button>
         </div>
       </div>
     </div>
@@ -39,8 +42,19 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted, onBeforeUnmount, inject, Ref } from "vue-demi";
-import type { CommentVo, CommentEditor, ActionStatus } from "../../../types/word-comment.d";
+import {
+  defineComponent,
+  ref,
+  onMounted,
+  onBeforeUnmount,
+  inject,
+  Ref,
+} from "vue-demi";
+import type {
+  CommentVo,
+  CommentEditor,
+  ActionStatus,
+} from "../../../types/word-comment.d";
 
 export default defineComponent({
   name: "CreateCard",
@@ -83,12 +97,17 @@ export default defineComponent({
     const cardListener = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
       if (
-        !(target && typeof target.className === "string" && target.className.includes("disable-card-focus")) &&
+        !(
+          target &&
+          typeof target.className === "string" &&
+          target.className.includes("disable-card-focus")
+        ) &&
         cardRef.value
       ) {
         if (
           !cardRef.value.contains(target) ||
-          (typeof target.className === "string" && target.className.includes("disable-focus-hidden"))
+          (typeof target.className === "string" &&
+            target.className.includes("disable-focus-hidden"))
         ) {
           cancelCreate();
         }
@@ -103,17 +122,12 @@ export default defineComponent({
       resultRef.value.removeEventListener("mousedown", cardListener, false);
     });
 
-    function handleMentionClick() {
-      commentEditorRef.value.insertText("@");
-    }
-
     return {
       cardRef,
       commentText,
       createCard,
       cancelCreate,
       commentEditorRef,
-      handleMentionClick,
       handleCommentTextChange,
       saveDisabled,
       createWordStatus,

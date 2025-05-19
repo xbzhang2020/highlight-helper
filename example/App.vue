@@ -1,7 +1,6 @@
 <template>
   <div>
-    <el-button type="primary">Primary</el-button>
-    <!-- <WordCommentContainer
+    <WordCommentContainer
       ref="containerRef"
       :userInfo="userInfo"
       :dataSource="wordCommentList"
@@ -17,9 +16,11 @@
         <Article />
       </template>
       <template #popover>
-        <mtd-icon-button class="popover-icon-btn" type="secondary" icon="mtdicon mtdicon-comment" />
+        <el-button class="popover-icon-btn">
+          <el-icon><EditPen /></el-icon>
+        </el-button>
       </template>
-    </WordCommentContainer> -->
+    </WordCommentContainer>
   </div>
 </template>
 
@@ -34,6 +35,7 @@ import type {
   WordInfo,
   CommentVo,
 } from "../types/index";
+import { EditPen } from "@element-plus/icons-vue";
 
 const key = "word-comment";
 
@@ -54,6 +56,7 @@ export default defineComponent({
   name: "App",
   components: {
     Article,
+    EditPen,
   },
   setup() {
     const userInfo = {
@@ -86,7 +89,6 @@ export default defineComponent({
           // 结束轮询
           if (finished) {
             timer = null;
-            // biome-ignore lint/correctness/noUnsafeFinally: <explanation>
             return;
           }
           // 递归调用，实现轮询
@@ -187,7 +189,7 @@ export default defineComponent({
         ...range,
         id: createId(),
         comments: [newComment],
-        status: "mismatched",
+        // status: "mismatched",
       };
 
       const originData = await getWordList();

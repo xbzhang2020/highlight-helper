@@ -8,9 +8,9 @@
       <div class="operation">
         <slot name="comment-filter" />
         <div class="operation-separator"></div>
-        <mtd-tooltip content="收起评论" size="small" placement="top">
-          <mtd-icon-button type="secondary" icon="mtdicon mtdicon-close" @click="$emit('close')" />
-        </mtd-tooltip>
+        <el-tooltip effect="dark" size="small" content="收起评论">
+          <el-icon @click="$emit('close')"><Close /></el-icon>
+        </el-tooltip>
       </div>
     </div>
 
@@ -48,7 +48,16 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, onMounted, PropType, ref, watch, provide, Ref, computed } from "vue-demi";
+import {
+  defineComponent,
+  onMounted,
+  PropType,
+  ref,
+  watch,
+  provide,
+  Ref,
+  computed,
+} from "vue-demi";
 import CardPanel from "./card/CardPanel.vue";
 import CommentList from "./comment/CommentList.vue";
 import { CommentService } from "../services/comment";
@@ -61,6 +70,7 @@ import type {
   UserInfo,
   AddCommentParams,
 } from "../../types/word-comment";
+import { Close } from "@element-plus/icons-vue";
 
 export default defineComponent({
   props: {
@@ -70,7 +80,7 @@ export default defineComponent({
     },
     activeId: [Number, String],
   },
-  components: { CardPanel, CommentList },
+  components: { CardPanel, CommentList, Close },
   setup(props, { emit }) {
     const cardPanelRef = ref<InstanceType<typeof CardPanel>>(null);
     const commentText = ref("");
@@ -137,7 +147,7 @@ export default defineComponent({
         }
         updateCommenterInfos(props.dataSource);
       },
-      { immediate: true },
+      { immediate: true }
     );
 
     provide("commenterInfos", commenterInfos);

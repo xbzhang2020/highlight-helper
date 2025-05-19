@@ -1,12 +1,16 @@
 <template>
   <div class="container-wrapper">
-    <mtd-tooltip content="展开评论" placement="top" v-show="!localShowComment">
+    <el-tooltip content="展开评论" v-if="!localShowComment">
       <div class="expand-comment-btn" @click="openComment">
-        <i class="mtdicon mtdicon-comment"></i>
+        <el-icon><Comment /></el-icon>
       </div>
-    </mtd-tooltip>
+    </el-tooltip>
 
-    <div ref="container" id="word-comment-container" class="word-comment-container">
+    <div
+      ref="container"
+      id="word-comment-container"
+      class="word-comment-container"
+    >
       <div ref="articleRef" class="article" @click="handleArticleClick">
         <slot name="article"></slot>
       </div>
@@ -29,12 +33,30 @@
           @focus-card="handleFocusCard"
         >
           <template #comment-filter>
-            <mtd-dropdown trigger="click" placement="bottom-end">
-              <mtd-tooltip content="筛选" size="small" placement="top">
-                <mtd-icon-button type="secondary" icon="mtdicon mtdicon-filter-o" />
-              </mtd-tooltip>
-              <mtd-dropdown-menu slot="dropdown" style="width: 220px" class="word-comment-filter-menu">
-                <mtd-dropdown-menu-item class="filter-menu-item" @click="commentFilterType = 'all'">
+            <!-- TODO: 待适配 -->
+            <!-- <el-dropdown>
+              <span class="el-dropdown-link">
+                <el-icon class="el-icon--right">
+                  <Filter />
+                </el-icon>
+              </span>
+              <template #dropdown>
+                <el-dropdown-menu>
+                  <el-dropdown-item>Action 1</el-dropdown-item>
+                  <el-dropdown-item>Action 2</el-dropdown-item>
+                  <el-dropdown-item>Action 3</el-dropdown-item>
+                  <el-dropdown-item disabled>Action 4</el-dropdown-item>
+                  <el-dropdown-item divided>Action 5</el-dropdown-item>
+                </el-dropdown-menu>
+              </template>
+            </el-dropdown> -->
+            <!-- <el-dropdown trigger="click" placement="bottom-end">
+              <el-tooltip content="筛选" size="small" placement="top">
+                筛选
+                 <el-icon-button type="secondary" icon="mtdicon mtdicon-filter-o" /> 
+              </el-tooltip>
+              <el-dropdown-menu slot="dropdown" style="width: 220px" class="word-comment-filter-menu">
+                <el-dropdown-menu-item class="filter-menu-item" @click="commentFilterType = 'all'">
                   <div class="filter-menu-item-left filter-menu-item-main">
                     <span>
                       全部
@@ -44,8 +66,8 @@
                   <div v-if="commentFilterType === 'all'">
                     <i class="mtdicon mtdicon-check filter-menu-item-check"></i>
                   </div>
-                </mtd-dropdown-menu-item>
-                <mtd-dropdown-menu-item class="filter-menu-item" @click="commentFilterType = 'related'">
+                </el-dropdown-menu-item>
+                <el-dropdown-menu-item class="filter-menu-item" @click="commentFilterType = 'related'">
                   <div class="filter-menu-item-left">
                     <div class="filter-menu-item-main">
                       <span>与我相关 {{ myRelatedComments.length }}</span>
@@ -55,9 +77,9 @@
                   <div v-if="commentFilterType === 'related'">
                     <i class="mtdicon mtdicon-check filter-menu-item-check"></i>
                   </div>
-                </mtd-dropdown-menu-item>
-              </mtd-dropdown-menu>
-            </mtd-dropdown>
+                </el-dropdown-menu-item>
+              </el-dropdown-menu>
+            </el-dropdown> -->
           </template>
         </WordComment>
       </transition>
@@ -99,6 +121,7 @@ import type {
   GetWordContainerId,
   GetWordContainer,
 } from "../../types/word-comment.d";
+import { Comment } from "@element-plus/icons-vue";
 
 function showSelectionPopover(target: HTMLElement, container: HTMLElement) {
   if (!target) return;
@@ -142,7 +165,9 @@ export default defineComponent({
       },
     },
     createWord: {
-      type: Function as PropType<(range: WordInfo, comment: CommentVo) => Promise<void>>,
+      type: Function as PropType<
+        (range: WordInfo, comment: CommentVo) => Promise<void>
+      >,
       required: true,
     },
     deleteWord: {
@@ -150,7 +175,9 @@ export default defineComponent({
       required: true,
     },
     deleteComment: {
-      type: Function as PropType<(params: DeleteCommentParams) => Promise<void>>,
+      type: Function as PropType<
+        (params: DeleteCommentParams) => Promise<void>
+      >,
       required: true,
     },
     addComment: {
@@ -158,7 +185,9 @@ export default defineComponent({
       required: true,
     },
     updateComment: {
-      type: Function as PropType<(params: UpdateCommentParams) => Promise<void>>,
+      type: Function as PropType<
+        (params: UpdateCommentParams) => Promise<void>
+      >,
       required: true,
     },
     userInfo: {
@@ -172,6 +201,7 @@ export default defineComponent({
   },
   components: {
     WordComment,
+    Comment,
   },
   setup(props, { emit }) {
     const underlineService = new UnderlineService();
@@ -214,7 +244,7 @@ export default defineComponent({
       () => {
         localShowComment.value = props.showComment;
       },
-      { immediate: true },
+      { immediate: true }
     );
 
     watch(
@@ -222,7 +252,7 @@ export default defineComponent({
       (val) => {
         emit("update:show-comment", val);
       },
-      { immediate: true },
+      { immediate: true }
     );
 
     const commentFilterType = ref<WordCommentFilterType>("all");
@@ -231,7 +261,10 @@ export default defineComponent({
       const misId = userInfo.value?.misId;
       if (!misId) return [];
       return props.dataSource.filter((item) =>
-        item.comments.some((sumItem) => sumItem.createdBy === misId || sumItem.mentioned.includes(misId)),
+        item.comments.some(
+          (sumItem) =>
+            sumItem.createdBy === misId || sumItem.mentioned.includes(misId)
+        )
       );
     });
 
@@ -245,7 +278,9 @@ export default defineComponent({
     watch(commentList, (value, oldValue) => {
       nextTick(() => {
         // 删除失效的划词
-        const deleteWords = value.filter((item) => item.status === "mismatched");
+        const deleteWords = value.filter(
+          (item) => item.status === "mismatched"
+        );
         oldValue?.forEach((item) => {
           if (!value.some(({ id }) => id === item.id)) {
             deleteWords.push(item);
@@ -258,8 +293,14 @@ export default defineComponent({
         let words = commentList.value;
 
         // 新创建的划词，替换划词的id
-        if (UnderlineService.isTempWordId(activeId.value) && activeRangeInfo.value) {
-          const sameWord = UnderlineService.hasWord(activeRangeInfo.value, commentList.value);
+        if (
+          UnderlineService.isTempWordId(activeId.value) &&
+          activeRangeInfo.value
+        ) {
+          const sameWord = UnderlineService.hasWord(
+            activeRangeInfo.value,
+            commentList.value
+          );
           if (sameWord) {
             UnderlineService.replaceWordId(activeId.value, sameWord.id);
             words = words.filter((item) => item.id !== sameWord.id);
@@ -280,7 +321,9 @@ export default defineComponent({
       }
 
       if (activeId.value && active) {
-        const data = commentList.value.find((item) => item.id === activeId.value);
+        const data = commentList.value.find(
+          (item) => item.id === activeId.value
+        );
         underlineService.activateWord(data);
       }
     }
@@ -288,7 +331,9 @@ export default defineComponent({
     function handleMouseup(event: MouseEvent) {
       // 获取内容所在的容器元素
       const eleTarget = event.target as HTMLElement;
-      const container = eleTarget?.closest(underlineService.wordContainerSelector) as HTMLElement;
+      const container = eleTarget?.closest(
+        underlineService.wordContainerSelector
+      ) as HTMLElement;
       if (!container) return;
       hideSelectionPopover(popoverRef.value);
       showSelectionPopover(popoverRef.value, container);
@@ -322,11 +367,15 @@ export default defineComponent({
     }
 
     function handleArticleClick(event: MouseEvent) {
-      const wordElement = UnderlineService.getClosetWordElement(event.target as HTMLElement);
+      const wordElement = UnderlineService.getClosetWordElement(
+        event.target as HTMLElement
+      );
       if (!wordElement) return;
 
       activeId.value = UnderlineService.getWordId(wordElement);
-      activeRangeInfo.value = commentList.value.find((item) => item.id === activeId.value);
+      activeRangeInfo.value = commentList.value.find(
+        (item) => item.id === activeId.value
+      );
 
       // 处理划词
       underlineService.activateWord(activeRangeInfo.value);
