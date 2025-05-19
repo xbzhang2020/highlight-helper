@@ -1,0 +1,55 @@
+{
+  "name": "word-comment",
+  "version": "0.1.0-beta.15",
+  "description": "",
+  "type": "module",
+  "main": "./lib/index.umd.cjs",
+  "module": "./lib/index.js",
+  "exports": {
+    ".": {
+      "import": "./lib/index.js",
+      "require": "./lib/index.umd.cjs"
+    }
+  },
+  "private": false,
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "vite",
+    "build": "vite build"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git@github.com:xbzhang2020/highlight-helper.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@vue/composition-api": "^1.7.1",
+    "@wangeditor/editor": "^5.1.23",
+    "@wangeditor/editor-for-vue": "^1.0.2",
+    "@wangeditor/plugin-mention": "^1.0.0",
+    "prettier": "3.0.1",
+    "sass": "^1.64.0",
+    "typescript": "^5.1.6",
+    "vite": "^4.4.6",
+    "vite-plugin-css-injected-by-js": "3.0.0",
+    "vite-plugin-vue2": "^2.0.3",
+    "vue": "~2.6.14",
+    "vue-template-compiler": "~2.6.14"
+  },
+  "peerDependencies": {
+    "vue": "^2.0.0",
+    "@vue/composition-api": "^1.7.1"
+  },
+  "peerDependenciesMeta": {
+    "@vue/composition-api": {
+      "optional": true
+    }
+  },
+  "dependencies": {
+    "vue-demi": "^0.14.6"
+  },
+  "types": "./types/index.d.ts",
+  "packageManager": "pnpm@10.2.1"
+}
