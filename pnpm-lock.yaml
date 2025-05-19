@@ -37,7 +37,7 @@ importers:
         specifier: ^1.89.0
         version: 1.89.0
       typescript:
-        specifier: ^5.1.6
+        specifier: ^5.8.3
         version: 5.8.3
       vite:
         specifier: ^6.3.5

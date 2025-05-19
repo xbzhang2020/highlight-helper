@@ -9,7 +9,7 @@ export default defineConfig({
     host: "0.0.0.0",
   },
   build: {
-    outDir: "lib",
+    outDir: "dist",
     lib: {
       entry: "./src/index.ts",
       name: "WordComment",
